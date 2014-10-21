@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>hogehoge</title>
+</head>
+<body>
+<h1>WebGL Samples</h1>
+<ul id="list">
+</ul>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var LIST = [
+        'basic'
+    ];
+    var list = document.getElementById('list');
+    var tmpl = document.createElement('li');
+
+    tmpl.appendChild(document.createElement('a'));
+    LIST.forEach(function(item) {
+        var elm = tmpl.cloneNode(true);
+        var anchor = elm.firstChild;
+
+        anchor.href = './samples/' + item + '.html';
+        anchor.textContent = item;
+        list.appendChild(elm);
+    });
+})
+</script>
+</body>
+</html>
