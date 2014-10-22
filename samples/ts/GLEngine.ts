@@ -17,19 +17,33 @@ class GLEngine {
         var gl = this.gl;
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.clearDepth(1.0);
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    createArrayBuffer(vertices:number[]):WebGLBuffer {
+    createVBO(vertices:number[]):WebGLBuffer {
         var gl = this.gl;
         var buffer:WebGLBuffer = gl.createBuffer();
 
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
         return buffer;
+    }
+
+    setProgramWithShaders(...shaders: WebGLShader[]):WebGLProgram {
+        var gl = this.gl;
+        var program = gl.createProgram();
+
+        for (var i = 0, iz = shaders.length; i < iz; i++) {
+            gl.attachShader(program, shaders[i]);
+        }
+        gl.linkProgram(program);
+        if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            gl.useProgram(program);
+            return program;
+        } else {
+            console.error(gl.getProgramInfoLog(program));
+        }
     }
 
     setShaderWithIdList(idList: string[]) {

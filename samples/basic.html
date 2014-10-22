@@ -3,12 +3,14 @@
 <head lang="en">
 <meta charset="UTF-8">
 <title>basic</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.2.1/gl-matrix.js"></script>
 <script src="js/GLEngine.js"></script>
 <script id="vertex-shader" type="x-shader/x-vertex">
 precision mediump float;
-attribute vec2 vertex;
+attribute vec3 vertex;
+uniform mat4 mvpMatrix;
 void main() {
-  gl_Position = vec4(vertex, 0.0, 1.0);
+    gl_Position = mvpMatrix * vec4(vertex, 1.0);
 }
 </script>
 <script id="fragment-shader" type="x-shader/x-fragment">
