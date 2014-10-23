@@ -23,6 +23,15 @@ class GLEngine {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
+    bindNewVBO(vertices:number[]): WebGLBuffer {
+        var gl = this.gl;
+        var buffer:WebGLBuffer = gl.createBuffer();
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        return buffer;
+    }
+
     createVBO(vertices:number[]):WebGLBuffer {
         var gl = this.gl;
         var buffer:WebGLBuffer = gl.createBuffer();
@@ -47,23 +56,6 @@ class GLEngine {
         } else {
             console.error(gl.getProgramInfoLog(program));
         }
-    }
-
-    setShaderWithIdList(idList: string[]) {
-        var gl = this.gl;
-        var program = gl.createProgram();
-
-        idList.forEach(function(id) {
-            var shader = this.getShader(id);
-
-            if (!shader) {
-                return;
-            }
-            gl.attachShader(program, shader);
-        }, this);
-        gl.bindAttribLocation(program, 0, 'vertex');
-        gl.linkProgram(program);
-        gl.useProgram(program);
     }
 
     getShader(shaderTargetId:string):WebGLShader {

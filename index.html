@@ -4,26 +4,53 @@
 <meta charset="UTF-8">
 <title>hogehoge</title>
 </head>
+<style>
+#sheet, #sheet th, #sheet td {
+    border: #aaa solid 1px;
+}
+</style>
 <body>
 <h1>WebGL Samples</h1>
 <ul id="list">
 </ul>
+<table id="sheet">
+    <tr>
+        <th>&nbsp;</th>
+        <th>WebGL</th>
+        <th>Canvas</th>
+    </tr>
+</table>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var LIST = [
+    var ITEMS = [
         'basic'
     ];
-    var list = document.getElementById('list');
-    var tmpl = document.createElement('li');
+    var WEBGL_SUFFIX = '_webgl';
+    var CANVAS_SUFFIX = '_canvas';
 
-    tmpl.appendChild(document.createElement('a'));
-    LIST.forEach(function(item) {
+    var sheet = document.getElementById('sheet');
+
+    var tmpl = document.createElement('tr');
+    var itemTd = document.createElement('td');
+
+    itemTd.appendChild(document.createElement('a'));
+
+    tmpl.appendChild(document.createElement('th'));
+    tmpl.appendChild(itemTd.cloneNode(true));
+    tmpl.appendChild(itemTd.cloneNode(true));
+
+    ITEMS.forEach(function(item) {
         var elm = tmpl.cloneNode(true);
-        var anchor = elm.firstChild;
 
-        anchor.href = './samples/' + item + '.html';
-        anchor.textContent = item;
-        list.appendChild(elm);
+        // th
+        elm.children[0].textContent = item;
+        // webgl
+        elm.children[1].firstChild.href = './samples/' + item + WEBGL_SUFFIX + '.html';
+        elm.children[1].firstChild.textContent = 'jump';
+        // canvas
+        elm.children[2].firstChild.href = './samples/' + item + CANVAS_SUFFIX + '.html';
+        elm.children[2].firstChild.textContent = 'jump';
+        sheet.appendChild(elm);
     });
 })
 </script>

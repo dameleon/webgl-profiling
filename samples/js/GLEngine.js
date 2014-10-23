@@ -18,6 +18,13 @@ var GLEngine = (function () {
         gl.clearDepth(1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     };
+    GLEngine.prototype.bindNewVBO = function (vertices) {
+        var gl = this.gl;
+        var buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        return buffer;
+    };
     GLEngine.prototype.createVBO = function (vertices) {
         var gl = this.gl;
         var buffer = gl.createBuffer();
@@ -44,20 +51,6 @@ var GLEngine = (function () {
         else {
             console.error(gl.getProgramInfoLog(program));
         }
-    };
-    GLEngine.prototype.setShaderWithIdList = function (idList) {
-        var gl = this.gl;
-        var program = gl.createProgram();
-        idList.forEach(function (id) {
-            var shader = this.getShader(id);
-            if (!shader) {
-                return;
-            }
-            gl.attachShader(program, shader);
-        }, this);
-        gl.bindAttribLocation(program, 0, 'vertex');
-        gl.linkProgram(program);
-        gl.useProgram(program);
     };
     GLEngine.prototype.getShader = function (shaderTargetId) {
         var gl = this.gl;
