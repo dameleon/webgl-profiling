@@ -32,6 +32,15 @@ class GLEngine {
         return buffer;
     }
 
+    bindNewIBO(vertices:number[]): WebGLBuffer {
+        var gl = this.gl;
+        var buffer:WebGLBuffer = gl.createBuffer();
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int16Array, gl.STATIC_DRAW);
+        return buffer;
+    }
+
     createVBO(vertices:number[]):WebGLBuffer {
         var gl = this.gl;
         var buffer:WebGLBuffer = gl.createBuffer();
@@ -40,6 +49,15 @@ class GLEngine {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         return buffer;
+    }
+
+    setAttribute(program:WebGLProgram, name:string, stride:number):number {
+        var gl = this.gl;
+        var location = gl.getAttribLocation(program, name);
+
+        gl.enableVertexAttribArray(location);
+        gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0);
+        return location;
     }
 
     setProgramWithShaders(...shaders: WebGLShader[]):WebGLProgram {

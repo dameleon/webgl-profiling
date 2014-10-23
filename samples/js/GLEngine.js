@@ -25,6 +25,13 @@ var GLEngine = (function () {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         return buffer;
     };
+    GLEngine.prototype.bindNewIBO = function (vertices) {
+        var gl = this.gl;
+        var buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int16Array, gl.STATIC_DRAW);
+        return buffer;
+    };
     GLEngine.prototype.createVBO = function (vertices) {
         var gl = this.gl;
         var buffer = gl.createBuffer();
@@ -32,6 +39,13 @@ var GLEngine = (function () {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         return buffer;
+    };
+    GLEngine.prototype.setAttribute = function (program, name, stride) {
+        var gl = this.gl;
+        var location = gl.getAttribLocation(program, name);
+        gl.enableVertexAttribArray(location);
+        gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0);
+        return location;
     };
     GLEngine.prototype.setProgramWithShaders = function () {
         var shaders = [];

@@ -33,15 +33,11 @@ void main() {
     var fragShader = glEngine.getShader('fragment-shader');
     var verShader = glEngine.getShader('vertex-shader');
     var program = glEngine.setProgramWithShaders(verShader, fragShader);
-    var attrLocation = gl.getAttribLocation(program, 'position');
-    var attrStride = 3;
-    var colorAttrLocation = gl.getAttribLocation(program, 'color');
-    var colorAttrStride = 4;
 
     var vertexPosition = [
         0.0, 1.0, 0.0,
         1.0, 0.0, 0.0,
-       -1.0, 0.0, 0.0
+        -1.0, 0.0, 0.0
     ];
     var vertexColor = [
         1.0, 0.0, 0.0, 1.0,
@@ -49,12 +45,15 @@ void main() {
         0.0, 0.0, 1.0, 1.0
     ];
 
+    var index = [
+        0, 1, 2,
+        1, 2, 3
+    ];
+
     glEngine.bindNewVBO(vertexPosition);
-    gl.enableVertexAttribArray(attrLocation);
-    gl.vertexAttribPointer(attrLocation, attrStride, gl.FLOAT, false, 0, 0);
+    glEngine.setAttribute(program, 'position', 3);
     glEngine.bindNewVBO(vertexColor);
-    gl.enableVertexAttribArray(colorAttrLocation);
-    gl.vertexAttribPointer(colorAttrLocation, colorAttrStride, gl.FLOAT, false, 0, 0);
+    glEngine.setAttribute(program, 'color', 4);
 
     var uniLocation = gl.getUniformLocation(program, 'mvpMatrix');
     var mMat = mat4.identity(mat4.create());
