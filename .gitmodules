@@ -1,0 +1,3 @@
+[submodule "samples/ts/d.ts/gl-matrix"]
+	path = samples/ts/d.ts/gl-matrix
+	url = git@github.com:dameleon/gl-matrix.d.ts.git

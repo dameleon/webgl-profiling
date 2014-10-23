@@ -3,7 +3,7 @@ var typescript = require('gulp-tsc');
 var connect = require('gulp-connect');
 
 gulp.task('compile-ts', function() {
-    gulp.src(['samples/ts/**/*.ts'])
+    gulp.src(['samples/ts/**/*.ts', '!samples/ts/d.ts', '!samples/ts/d.ts/**'])
         .pipe(typescript({
             target: 'ES5'
         }))

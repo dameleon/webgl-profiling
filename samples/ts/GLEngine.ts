@@ -1,3 +1,5 @@
+/// <reference path="./d.ts/gl-matrix/gl-matrix.d.ts" />
+
 class GLEngine {
     private canvas:HTMLCanvasElement;
     private gl:WebGLRenderingContext;
@@ -17,7 +19,8 @@ class GLEngine {
         var gl = this.gl;
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clearDepth(1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
     createVBO(vertices:number[]):WebGLBuffer {

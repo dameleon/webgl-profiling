@@ -4,41 +4,62 @@
 <meta charset="UTF-8">
 <title>basic</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.2.1/gl-matrix.js"></script>
+<script src="//wgld.org/j/minMatrix.js"></script>
 <script src="js/GLEngine.js"></script>
 <script id="vertex-shader" type="x-shader/x-vertex">
-precision mediump float;
-attribute vec3 vertex;
+attribute vec3 position;
 uniform mat4 mvpMatrix;
 void main() {
-    gl_Position = mvpMatrix * vec4(vertex, 1.0);
+    gl_Position = mvpMatrix * vec4(position, 1.0);
 }
 </script>
 <script id="fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
 void main() {
   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 </script>
 </head>
 <body>
-<canvas id="viewer" width="640" height="480"></canvas>
+<canvas id="viewer" width="320" height="320"></canvas>
 <script>
 (function (global, document, undefined) {
-    var glEngine = new GLEngine('viewer', 640, 480);
+    var glEngine = new GLEngine('viewer', 320, 320);
     var gl = glEngine.gl;
-    var buffer = glEngine.createArrayBuffer([
-        -0.8,-0.8, 0.3,-0.6, -0.6,0.3,
-        0.3,-0.6, 0.2,0.7, -0.6,0.3,
-        0.3,-0.6, 0.7,0.2, -0.6,0.3
-    ]);
+    var fragShader = glEngine.getShader('fragment-shader');
+    var verShader = glEngine.getShader('vertex-shader');
+    var program = glEngine.setProgramWithShaders(verShader, fragShader);
+    var attrLocation = gl.getAttribLocation(program, 'position');
+    var attrStride = 3;
 
-    glEngine.setShaderWithIdList([
-        'vertex-shader',
-        'fragment-shader'
-    ]);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(0);
-    gl.drawArrays(gl.TRIANGLES, 0, 9);
+    console.log(glEngine);
+
+    var vertexPosition = [
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+       -1.0, 0.0, 0.0
+    ];
+    var vbo = glEngine.createVBO(vertexPosition);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    gl.enableVertexAttribArray(attrLocation);
+    gl.vertexAttribPointer(attrLocation, attrStride, gl.FLOAT, false, 0, 0);
+
+    var mMat = mat4.identity(mat4.create());
+    var vMat = mat4.identity(mat4.create());
+    var pMat = mat4.identity(mat4.create());
+    var mvpMat = mat4.identity(mat4.create());
+
+    mat4.lookAt(vMat, [0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0]);
+    mat4.perspective(pMat, 90, glEngine.width / glEngine.height, 0.1, 100);
+    mat4.mul(mvpMat, pMat, vMat);
+    mat4.mul(mvpMat, mvpMat, mMat);
+
+    var uniLocation = gl.getUniformLocation(program, 'mvpMatrix');
+
+    gl.uniformMatrix4fv(uniLocation, false, mvpMat);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    gl.flush();
 
 })(window, document, void 0);
 </script>
