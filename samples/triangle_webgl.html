@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>basic</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.2.1/gl-matrix.js"></script>
+<script src="//wgld.org/j/minMatrix.js"></script>
+<script src="js/GLEngine.js"></script>
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec3 position;
+attribute vec4 color;
+uniform mat4 mvpMatrix;
+varying vec4 vColor;
+void main() {
+    vColor = color;
+    gl_Position = mvpMatrix * vec4(position, 1.0);
+}
+</script>
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor;
+void main() {
+  gl_FragColor = vColor;
+}
+</script>
+</head>
+<body>
+<canvas id="viewer" width="320" height="320"></canvas>
+<script>
+(function (global, document, undefined) {
+    var glEngine = new GL.Engine('viewer', 320, 320);
+    var gl = glEngine.gl;
+    var fragShader = glEngine.getShader('fragment-shader');
+    var verShader = glEngine.getShader('vertex-shader');
+    var program = glEngine.setProgramWithShaders(verShader, fragShader);
+
+    var vertexPosition = [
+        0.0, 1.0, 0.0,
+        1.0, 0.0, 0.0,
+        -1.0, 0.0, 0.0
+    ];
+    var vertexColor = [
+        1.0, 0.0, 0.0, 1.0,
+        0.0, 1.0, 0.0, 1.0,
+        0.0, 0.0, 1.0, 1.0
+    ];
+
+    glEngine.bindNewVBO(vertexPosition);
+    glEngine.setAttribute(program, 'position', 3);
+    glEngine.bindNewVBO(vertexColor);
+    glEngine.setAttribute(program, 'color', 4);
+
+    var uniLocation = gl.getUniformLocation(program, 'mvpMatrix');
+    var mMat = mat4.identity(mat4.create());
+    var vMat = mat4.identity(mat4.create());
+    var pMat = mat4.identity(mat4.create());
+    var mvpMat = mat4.identity(mat4.create());
+    var tmpMat = mat4.identity(mat4.create());
+
+    mat4.lookAt(vMat, [0.0, 0.0, 1.5], [0, 0, 0], [0, 1, 0]);
+    mat4.perspective(pMat, 90, glEngine.width / glEngine.height, 0.1, 100);
+    mat4.mul(tmpMat, pMat, vMat);
+
+    var count = Number.MAX_SAFE_INTEGER;
+
+    var animation = new GL.Animation(function(duration, currentTime, startTime) {
+        glEngine.reset();
+
+        count--;
+        if (count === 0) {
+            count = Number.MAX_SAFE_INTEGER;
+        }
+        var rad = (count % 360) * Math.PI / 180;
+        var x = Math.cos(rad);
+        var y = Math.sin(rad);
+
+        mat4.identity(mMat);
+        mat4.translate(mMat, mMat, [x, y, 0.0]);
+        mat4.mul(mvpMat, tmpMat, mMat);
+        gl.uniformMatrix4fv(uniLocation, false, mvpMat);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.flush();
+    });
+
+    animation.play();
+
+})(window, document, void 0);
+</script>
+</body>
+</html>
