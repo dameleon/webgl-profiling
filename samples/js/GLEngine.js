@@ -10,13 +10,16 @@ var GL;
         function Engine(canvasId, width, height) {
             this.width = width;
             this.height = height;
+            var gl;
             this.canvas = document.getElementById(canvasId);
             try {
-                this.gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
+                gl = this.gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
             }
             catch (e) {
                 console.error(e);
             }
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
             this.reset();
         }
         Engine.prototype.reset = function () {
@@ -24,6 +27,22 @@ var GL;
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
             gl.clearDepth(1.0);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        };
+        Engine.prototype.loadTexture = function (url, callback) {
+            var gl = this.gl;
+            var image = new Image();
+            image.onload = function () {
+                var tex = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, tex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+                gl.generateMipmap(gl.TEXTURE_2D);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                callback(null, tex);
+            };
+            image.onerror = function (e) {
+                callback(e, null);
+            };
+            image.src = url;
         };
         Engine.prototype.bindNewVBO = function (vertices) {
             var gl = this.gl;

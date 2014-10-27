@@ -53,7 +53,7 @@ void main() {
     glEngine.bindNewVBO(vertexColor);
     glEngine.setAttribute(program, 'color', 4);
 
-    var ibo = bindNewIBO(index);
+    var ibo = glEngine.bindNewIBO(index);
 
     var uniLocation = gl.getUniformLocation(program, 'mvpMatrix');
     var mMat = mat4.identity(mat4.create());
@@ -83,7 +83,7 @@ void main() {
         mat4.translate(mMat, mMat, [x, y, 0.0]);
         mat4.mul(mvpMat, tmpMat, mMat);
         gl.uniformMatrix4fv(uniLocation, false, mvpMat);
-        gl.drawElements(gl.TRIANGLES, index.length, gl.UNSIGNED_SHORT)
+        gl.drawElements(gl.TRIANGLES, index.length, gl.UNSIGNED_SHORT, 0);
         gl.flush();
     });
 
