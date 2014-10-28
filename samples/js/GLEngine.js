@@ -126,17 +126,19 @@ var GL;
             this.isAnimated = false;
             this.listeners = [];
             this.now = Date.now;
+            this.fps = 0;
             if (callback) {
                 this.addListener(callback);
             }
         }
         Animation.prototype.play = function () {
             this.isAnimated = true;
-            this.startedAt = this.now();
+            this.startedAt = this.lastUpdateAt = this.now();
             this._exec();
         };
         Animation.prototype.stop = function () {
             this.startedAt = null;
+            this.lastUpdateAt = null;
             this.isAnimated = false;
         };
         Animation.prototype.addListener = function (callback) {
@@ -158,6 +160,8 @@ var GL;
             var startedAt = this.startedAt;
             var now = this.now();
             var duration = now - this.startedAt;
+            this.fps = 1000 / (now - this.lastUpdateAt);
+            this.lastUpdateAt = now;
             for (var i = 0, callback; callback = listeners[i]; i++) {
                 callback(duration, now, startedAt);
             }

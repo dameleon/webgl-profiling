@@ -147,9 +147,11 @@ module GL {
 
     export class Animation {
         private startedAt:number;
+        private lastUpdateAt:number;
         private isAnimated:boolean = false;
         private listeners:IAnimationCallback[] = [];
-        private now:Function = Date.now;
+        private now:Function = Date.now
+        public fps:number = 0;
         constructor(callback?:IAnimationCallback) {
             if (callback) {
                 this.addListener(callback);
@@ -157,11 +159,12 @@ module GL {
         }
         play() {
             this.isAnimated = true;
-            this.startedAt = this.now();
+            this.startedAt = this.lastUpdateAt = this.now();
             this._exec();
         }
         stop() {
             this.startedAt = null;
+            this.lastUpdateAt = null;
             this.isAnimated = false;
         }
         addListener(callback:IAnimationCallback) {
@@ -184,6 +187,8 @@ module GL {
             var now = this.now();
             var duration = now - this.startedAt;
 
+            this.fps = 1000 / (now - this.lastUpdateAt);
+            this.lastUpdateAt = now;
             for (var i = 0, callback; callback = listeners[i]; i++) {
                 callback(duration, now, startedAt);
             }

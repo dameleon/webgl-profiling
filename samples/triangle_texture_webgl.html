@@ -31,9 +31,11 @@ void main(void){
     gl_FragColor  = vColor * smpColor;
 }
 </script>
+    <link rel="stylesheet" href="css/common.css"/>
 </head>
 <body>
 <canvas id="viewer" width="500" height="300"></canvas>
+<div class="counter"><span id="fps"></span></div>
 <script>
 (function (global, document, undefined) {
     var glEngine = new GL.Engine('viewer', 500, 300);

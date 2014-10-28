@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-<meta charset="UTF-8">
-<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>basic</title>
-<script src="//cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.2.1/gl-matrix.js"></script>
-<script src="//wgld.org/j/minMatrix.js"></script>
-<script src="js/GLEngine.js"></script>
-<script id="vertex-shader" type="x-shader/x-vertex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>basic</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.2.1/gl-matrix.js"></script>
+    <script src="//wgld.org/j/minMatrix.js"></script>
+    <script src="js/GLEngine.js"></script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
 attribute vec3 position;
 attribute vec4 color;
 uniform mat4 mvpMatrix;
@@ -17,14 +17,14 @@ void main() {
     gl_Position = mvpMatrix * vec4(position, 1.0);
 }
 </script>
-<script id="fragment-shader" type="x-shader/x-fragment">
+    <script id="fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
 varying vec4 vColor;
 void main() {
   gl_FragColor = vColor;
 }
 </script>
-<link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/common.css"/>
 </head>
 <body>
 <canvas id="viewer" width="320" height="320"></canvas>
